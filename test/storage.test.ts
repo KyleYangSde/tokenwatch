@@ -1,10 +1,13 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { mkdtemp, mkdir, readFile, writeFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { directories, LogReader, readConfig } from '../src/storage.js';
 const temporary:string[]=[];
 async function temp() {const p=await mkdtemp(join(tmpdir(),'tokenwatch-test-'));temporary.push(p);return p;}
+let savedCacheDir:string|undefined;
+beforeEach(async()=>{savedCacheDir=process.env.TOKENWATCH_CACHE_DIR;process.env.TOKENWATCH_CACHE_DIR=join(await temp(),'cache');});
+afterEach(()=>{if(savedCacheDir===undefined) delete process.env.TOKENWATCH_CACHE_DIR; else process.env.TOKENWATCH_CACHE_DIR=savedCacheDir;});
 afterEach(async()=>{await Promise.all(temporary.splice(0).map(p=>rm(p,{recursive:true,force:true})));});
 describe('log polling',()=>{
   it('discovers nested files, reuses unchanged logs and reparses appended or truncated files',async()=>{

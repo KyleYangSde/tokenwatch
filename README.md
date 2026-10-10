@@ -30,7 +30,7 @@ Or package it and run the resulting archive through npx:
 
 ```sh
 npm pack
-npx --package ./tokenwatch-cli-0.1.0.tgz tokenwatch report
+npx --package ./tokenwatch-cli-0.1.1.tgz tokenwatch report
 ```
 
 For a global local installation from a checkout: `npm install -g .`, then `tokenwatch report`.
@@ -55,13 +55,17 @@ Claude assistant records are deduplicated within each file by session, `message.
 
 Codex records obtain session/project from `session_meta` and model from `turn_context`. `token_count` uses `last_token_usage`, falling back to differences of cumulative totals. Null info and unchanged cumulative totals are skipped. Decreased counters start a fresh baseline. Input counts include cached input, so cached reads/writes are separated before pricing; reasoning is already included in output and is never added twice. Identical timestamp/usage records are deduplicated when totals are absent. Real local rollout logs were inspected; their optional `cache_write_input_tokens` is supported. Copying entire log files into the scanned tree can double-count usage across files.
 
+Logs are streamed line by line with up to eight files processed concurrently. Unrelated lines are filtered before JSON parsing; lines longer than 5 MiB are skipped. In an interactive terminal, scan progress appears on stderr and is cleared when scanning finishes. Redirected output and JSON stdout remain free of progress messages.
+
+Parsed events are cached locally in `~/.cache/tokenwatch/cache.json`, so unchanged files are reused across invocations. Set `TOKENWATCH_CACHE_DIR` to override the cache directory. The cache tracks each file's path, modification time and size, is invalidated by package or cache schema changes, and prunes deleted files. Writes use an atomic rename. Use `--no-cache` with `report`, `window`, or `watch` to bypass cache reads and writes, for example `tokenwatch report --no-cache --json`. The cache contains usage events and session/project metadata; delete it whenever needed and the next scan rebuilds it.
+
 ## Report
 
 ```sh
 tokenwatch report [--since YYYY-MM-DD] [--source claude|codex|all] [--by session|project|model|day] [--top N] [--json]
 ```
 
-Default output includes all days, models and projects, plus the top 10 sessions. `--by` selects one table, and `--top` limits its rows. Days and `--since` use UTC; the since date is inclusive. Days sort newest first; other tables sort by cost, then tokens. Session IDs are prefixed with source. Cache token columns are separate from uncached input. Unknown models appear explicitly and contribute $0 to the estimate. JSON is an object whose keys are the selected grouping names, with full numeric totals and `unknownModels` arrays.
+Default output includes all days, models and projects, plus the top 10 sessions. `--by` selects one table, and `--top` limits its rows. Days and `--since` use UTC; the since date is inclusive. Files whose modification time is older than the since date are skipped before reading; matching files still have their events filtered by timestamp. Days sort newest first; other tables sort by cost, then tokens. Session IDs are prefixed with source. Cache token columns are separate from uncached input. Unknown models appear explicitly and contribute $0 to the estimate. JSON is an object whose keys are the selected grouping names, with full numeric totals and `unknownModels` arrays.
 
 ```text
 By day

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { VERSION } from './version.js';
 import { Command, InvalidArgumentError, Option } from 'commander';
 import { LogReader, readConfig, Directories } from './storage.js';
 import { aggregate, Group, Summary } from './aggregation.js';
@@ -15,10 +16,10 @@ function table(rows:Summary[]):string {
   const widths=clean[0].map((_,i)=>Math.max(...clean.map(r=>r[i].length)));
   return clean.map((row,index)=>row.map((v,i)=>v.padEnd(widths[i])).join('  ')+(index===0?'\n'+widths.map(w=>'-'.repeat(w)).join('  '):'')).join('\n');
 }
-const program=new Command().name('tokenwatch').description('Local Claude Code and Codex CLI usage estimates').version('0.1.0');
-program.option('--claude-dir <path>','Claude projects directory (TOKENWATCH_CLAUDE_DIR)').option('--codex-dir <path>','Codex sessions directory (TOKENWATCH_CODEX_DIR)');
+const program=new Command().name('tokenwatch').description('Local Claude Code and Codex CLI usage estimates').version(VERSION);
+program.option('--no-cache','disable the persistent log cache').option('--claude-dir <path>','Claude projects directory (TOKENWATCH_CLAUDE_DIR)').option('--codex-dir <path>','Codex sessions directory (TOKENWATCH_CODEX_DIR)');
 function common(command:Command):Command {
-  return command.option('--claude-dir <path>','override Claude projects directory').option('--codex-dir <path>','override Codex sessions directory')
+  return command.option('--no-cache','disable the persistent log cache').option('--claude-dir <path>','override Claude projects directory').option('--codex-dir <path>','override Codex sessions directory')
     .addOption(new Option('--source <source>','usage source').choices(['claude','codex','all']).default('all'));
 }
 const reader=new LogReader();
