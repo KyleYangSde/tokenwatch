@@ -1,5 +1,5 @@
 {
-  "name": "tokenwatch",
+  "name": "tokenwatch-cli",
   "version": "0.1.0",
   "description": "Local Claude Code and Codex CLI token usage, costs and notifications",
   "type": "module",
@@ -30,5 +30,13 @@
   },
   "overrides": {
     "vite": "^6.4.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KyleYangSde/tokenwatch.git"
+  },
+  "homepage": "https://github.com/KyleYangSde/tokenwatch#readme",
+  "bugs": {
+    "url": "https://github.com/KyleYangSde/tokenwatch/issues"
   }
 }

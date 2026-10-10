@@ -4,6 +4,19 @@ MIT-licensed CLI for local Claude Code and Codex CLI token usage, estimated API 
 
 ## Install and run
 
+From npm (recommended):
+
+```sh
+npx tokenwatch-cli report
+```
+
+Or install globally; the command name is still `tokenwatch`:
+
+```sh
+npm install -g tokenwatch-cli
+tokenwatch report
+```
+
 From this checkout:
 
 ```sh
@@ -17,11 +30,10 @@ Or package it and run the resulting archive through npx:
 
 ```sh
 npm pack
-npx --package ./tokenwatch-0.1.0.tgz tokenwatch report
+npx --package ./tokenwatch-cli-0.1.0.tgz tokenwatch report
 ```
 
-For a global local installation: `npm install -g .`, then `tokenwatch report`.
-The package is ready for npm publication but this checkout does not publish it. After publication, registry usage is `npx tokenwatch report` or `npm install -g tokenwatch` (ensure the registry package is this project).
+For a global local installation from a checkout: `npm install -g .`, then `tokenwatch report`.
 
 ## Log directories
 
