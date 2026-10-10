@@ -1,0 +1,34 @@
+{
+  "name": "tokenwatch",
+  "version": "0.1.0",
+  "description": "Local Claude Code and Codex CLI token usage, costs and notifications",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "tokenwatch": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc && node scripts/executable.mjs",
+    "test": "vitest run",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "commander": "^12.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.7"
+  },
+  "overrides": {
+    "vite": "^6.4.4"
+  }
+}
